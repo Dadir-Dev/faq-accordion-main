@@ -11,7 +11,6 @@ const questions = document.querySelectorAll(".question");
 
 questions.forEach((question) => {
   const btn = question.querySelector(".question-btn");
-  const answer = question.querySelector(".answer");
 
   // Click: toggle this question, close others
   btn.addEventListener("click", () => {
