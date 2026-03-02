@@ -156,7 +156,10 @@ button:focus-visible {
   overflow: hidden;
   opacity: 0;
   transform: translateY(-0.25rem);
-  transition: height 0.3s ease, opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    height 0.3s ease,
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
 .answer p,
@@ -170,6 +173,7 @@ button:focus-visible {
 
 /* When open: fade/slide in for better perceived performance */
 .question.active .answer {
+  height: auto;
   opacity: 1;
   transform: translateY(0);
 }
