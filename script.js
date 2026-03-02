@@ -9,15 +9,46 @@
 
 const questions = document.querySelectorAll(".question");
 
+function closeQuestion(question) {
+  const answer = question.querySelector(".answer");
+
+  if (!answer) return;
+  if (!question.classList.contains("active")) {
+    answer.style.height = "0px";
+    return;
+  }
+
+  const currentHeight = answer.scrollHeight;
+  answer.style.height = `${currentHeight}px`;
+  question.classList.remove("active");
+
+  requestAnimationFrame(() => {
+    answer.style.height = "0px";
+  });
+}
+
+function openQuestion(question) {
+  const answer = question.querySelector(".answer");
+
+  if (!answer) return;
+
+  question.classList.add("active");
+  answer.style.height = "0px";
+
+  requestAnimationFrame(() => {
+    answer.style.height = `${answer.scrollHeight}px`;
+  });
+}
+
 function toggleQuestion(question) {
   const isCurrentlyOpen = question.classList.contains("active");
 
-  // Close all questions first
-  questions.forEach((item) => item.classList.remove("active"));
+  // Close all questions first (animated)
+  questions.forEach((item) => closeQuestion(item));
 
   // If it wasn't open, open it (toggle behavior)
   if (!isCurrentlyOpen) {
-    question.classList.add("active");
+    openQuestion(question);
   }
 
   updateAllAria();
@@ -38,6 +69,18 @@ questions.forEach((question) => {
       toggleQuestion(question);
     }
   });
+
+  const answer = question.querySelector(".answer");
+
+  // After expand animation, let the browser use natural content height
+  if (answer) {
+    answer.addEventListener("transitionend", (e) => {
+      if (e.propertyName !== "height") return;
+      if (question.classList.contains("active")) {
+        answer.style.height = "auto";
+      }
+    });
+  }
 });
 
 // Update aria-expanded for all questions (for screen readers)
@@ -49,3 +92,11 @@ function updateAllAria() {
 }
 
 updateAllAria(); // Set initial state (all collapsed)
+
+// Ensure all answers start collapsed with explicit inline height
+questions.forEach((question) => {
+  const answer = question.querySelector(".answer");
+  if (answer && !question.classList.contains("active")) {
+    answer.style.height = "0px";
+  }
+});
