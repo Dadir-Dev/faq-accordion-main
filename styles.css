@@ -111,11 +111,6 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
-/* Active/open question keeps purple text */
-.question.active button {
-  color: var(--purple-600);
-}
-
 .question p {
   flex: 1;
 }
@@ -162,8 +157,7 @@ button:focus-visible {
     transform 0.2s ease;
 }
 
-.answer p,
-.answer span {
+.answer p {
   font-size: 1rem;
   font-weight: 400;
   color: var(--purple-600);
