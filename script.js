@@ -2,9 +2,10 @@
  * FAQ Accordion - Study Notes:
  * - querySelectorAll gets all matching elements (returns NodeList)
  * - forEach loops through each question
- * - classList.toggle adds/removes a class
+ * - classList.add/remove controls open/closed state
  * - addEventListener can take 'keydown' for keyboard support
- * - Only one question open at a time (accordion behavior)
+ * - One open question at a time (accordion behavior)
+ * - height animates between 0px and scrollHeight for smooth transitions
  */
 
 const questions = document.querySelectorAll(".question");
@@ -69,18 +70,6 @@ questions.forEach((question) => {
       toggleQuestion(question);
     }
   });
-
-  const answer = question.querySelector(".answer");
-
-  // After expand animation, let the browser use natural content height
-  if (answer) {
-    answer.addEventListener("transitionend", (e) => {
-      if (e.propertyName !== "height") return;
-      if (question.classList.contains("active")) {
-        answer.style.height = "auto";
-      }
-    });
-  }
 });
 
 // Update aria-expanded for all questions (for screen readers)
@@ -91,12 +80,18 @@ function updateAllAria() {
   });
 }
 
-updateAllAria(); // Set initial state (all collapsed)
+updateAllAria(); // Sync initial aria-expanded with existing active class in HTML
 
-// Ensure all answers start collapsed with explicit inline height
+// Initialize inline heights so JS controls all accordion animations consistently
 questions.forEach((question) => {
   const answer = question.querySelector(".answer");
-  if (answer && !question.classList.contains("active")) {
-    answer.style.height = "0px";
+  if (!answer) return;
+
+  if (question.classList.contains("active")) {
+    // Keep open answer at a concrete pixel height to avoid the final auto-height jump.
+    answer.style.height = `${answer.scrollHeight}px`;
+    return;
   }
+
+  answer.style.height = "0px";
 });
